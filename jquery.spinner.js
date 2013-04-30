@@ -32,18 +32,18 @@ var Spinner = {
 	  }
     this.$el.append(this.$svg);
 
+    var base = this;
     // add hide helper
     if(this.options.hideWhenInactive) {
-	    this.$el.on('spinnerStart', function() { $(this).css('visibility', 'visible') });
-	    this.$el.on('spinnerStop', function() { $(this).css('visibility', 'hidden') });
-	    this.$el.css('visibility', 'hidden');
+	    this.$el.on('spinnerStart', function() { base.$path.css('visibility', 'visible') });
+	    this.$el.on('spinnerStop', function() { base.$path.css('visibility', 'hidden') });
+	    this.$path.css('visibility', 'hidden');
 	  }
 
     // setup initial path
     var width = this.$svg.width();
 
-    // this.rawPath = 'M 0 -{R2} v -{R1} A 1 1 0 {LARGE} 1 {X1} {Y1} L {X2} {Y2} A {R2} {R2} 0 {LARGE} 0 0 -{R2} z';
-    this.rawPath = 'M 1 {1-R1} A {R1} {R1} 0 {LARGE} 1 {X2} {Y2}';
+    this.rawPath = 'M 1 {1-R1} A {R1} {R1} 0 {LARGE} 1 {X1} {Y1}';
     this.rawPath = this.rawPath.
     	replace(/{R1}/g, this.options.radius).
     	replace(/{1-R1}/g, 1 - this.options.radius);
@@ -90,17 +90,13 @@ var Spinner = {
 			this.requestFrameId = requestAnimationFrame(this._frame.bind(this));
 		}
 
-		var angle = keyframe*this.options.totalAngles / 360 * Math.PI * 2;
-		var x1 = Math.sin(angle);
-		var y1 = -Math.cos(angle);
- 		var x2 = x1*this.options.radius + 1;
-		var y2 = y1*this.options.radius + 1;
+		var angle = keyframe*this.options.totalAngles / 360 * Math.PI*2;
+		var x1 = Math.sin(angle)*this.options.radius + 1;
+		var y1 = -Math.cos(angle)*this.options.radius + 1;
 		var largeArc = angle > Math.PI;
 		var path = this.rawPath.
 			replace(/{X1}/g, x1).
 			replace(/{Y1}/g, y1).
-			replace(/{X2}/g, x2).
-			replace(/{Y2}/g, y2).
 			replace(/{LARGE}/g, largeArc ? 1 : 0);
 		this.$path.attr('d', path);
 
@@ -127,11 +123,10 @@ Spinner.defaults = {
 	// 	height: 500
 	// },
 	// pathStyle: {
-	// 	fill: '#fff',
 	// 	stroke: '#aaa',
-	// 	strokeWidth: 0.01 // view box is 2 tall, so this is 1% of element height
+	// 	strokeWidth: 0.25 // view box is 2 tall, so this is 12.5% of element height
 	// },
-	// transform: 'translate(1,1) scale(0.9, 0.9)', // reduce size to fit stroke
+	// transform: 'rotate(45)' // start at different angle
 }
 
 $.fn.spinner = function(method) {
