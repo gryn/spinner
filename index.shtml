@@ -1,0 +1,57 @@
+<!--#include virtual="/includes/html.shtml"-->
+  <title>Spinner</title>
+  <style>
+#test {
+  background: #003366;
+  margin: 50px auto;
+  width: 100px;
+}
+.spinner-svg {
+  display: block;
+  width: 100px;
+  height: 100px;
+}
+.spinner-svg-path { 
+  fill: none;
+  stroke: #0077dd;
+  stroke-width: 0.25;
+}
+.spinner-no-svg {
+  display: block;
+  background: url(spinner.gif);
+  width: 100px;
+  height: 100px;
+}
+	</style>
+<!--#include virtual="/includes/head.shtml"-->
+  <script src="requestAnimationFrameShim.js"></script>
+  <script src="jquery.spinner.js"></script>
+	<script>
+$(function() {
+	$('#test').spinner({
+    radius: 0.875,
+    transform: '',
+    duration: 1000
+  });
+  $('#test').on('spinnerStart', function(e) {
+    console.log(this, arguments, e.type);
+  });
+  $('#test').on('spinnerStop', function(e) {
+    console.log(this, arguments, e.type);
+setTimeout(function() {  $('#test').spinner('start'); }, 1000);
+  });
+
+	$('#test').spinner('start');
+
+});
+
+
+	</script>
+</head>
+<body>
+
+<!--#include virtual="/includes/header.shtml"-->
+
+<div id="test"></div>
+
+<!--#include virtual="/includes/footer.shtml"-->
